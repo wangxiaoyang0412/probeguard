@@ -1,8 +1,0 @@
-MedMCQA unanimous-layer probe analysis (third-dataset replication)
-n_probed=2307/2308 (errors=1) wrong=513 right=1794
-flip(wrong)=26.5%  flip(right)=5.5%  flip_to_gold=104/513
-keep_rate AUROC=0.729 CI[0.705,0.753]
-f3_5 alone AUROC=0.534 (n=2307)
-keep+f3_5 combo AUROC=0.694 CI[0.665,0.723]
-median elapsed=102s
-reference: MedQA flip 14.0/4.2 keep .642 combo .685 | MMLU-Pro flip 16.3/3.3 keep .638 combo .688

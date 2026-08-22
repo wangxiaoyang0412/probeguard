@@ -17,8 +17,11 @@ Medical LLM Consensus Forms*.
 - `analysis/` — table/figure generators and analysis scripts used in the paper.
 - `patches/` — diffs applied to the substrate checkout for environment compatibility and
   response-format robustness across backbones; none touch the consensus decision logic.
-- `results/` — per-question probe records, feature tables, per-signal AUROC/AURC tables,
-  and calibration outputs backing every number in the paper.
+- `results/` — per-question probe records, feature tables, and per-signal summary tables.
+  Every result in the paper is re-derivable from these inputs by a script in `analysis/`
+  (discrimination and selective-risk tables via `gen_numbers.py`, certification via
+  `c8_fuel_cert.py`, figures via `fig_*.py`); only the generation stage itself requires
+  re-running the pipeline.
 - `registry.md` — the frozen feature registry (definitions fixed before evaluation data
   were inspected).
 - `tests/` — unit tests for schema validation, feature extraction, and the claim-extraction rule.

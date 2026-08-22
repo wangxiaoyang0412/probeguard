@@ -1,0 +1,13 @@
+diff --git a/microservice/RetrievalSystem.py b/microservice/RetrievalSystem.py
+index 44d6ec2..873d09f 100644
+--- a/microservice/RetrievalSystem.py
++++ b/microservice/RetrievalSystem.py
+@@ -286,7 +286,7 @@ class RetrievalSystem:
+             elif 'medcpt' in self.reranker_name.lower():
+                 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+                 self.reranker_tok = AutoTokenizer.from_pretrained(reranker_paths[self.reranker_name])
+-                self.reranker = AutoModelForSequenceClassification.from_pretrained(reranker_paths[self.reranker_name], device_map='auto')
++                self.reranker = AutoModelForSequenceClassification.from_pretrained(reranker_paths[self.reranker_name]).to(device)
+             else:
+                 raise NotImplementedError
+ 

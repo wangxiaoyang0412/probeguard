@@ -1,0 +1,12 @@
+specialty,n_s1,ua_err_pct,cert_coverage,risk_pct
+Cardiology,42,14.3,0.711,9.5
+Hematology,29,17.2,0.698,13.1
+Obstetrics and gynecology,51,11.8,0.681,14.7
+Gastroenterology,57,15.8,0.617,11.6
+Pediatrics,35,11.4,0.612,8.8
+Psychiatry,33,12.1,0.599,6.9
+Nephrology,30,13.3,0.595,8.1
+Emergency medicine,42,26.2,0.585,18.8
+Infectious diseases,36,13.9,0.577,10.3
+Endocrinology,51,11.8,0.524,4.1
+Neurology,37,10.8,0.495,7.6

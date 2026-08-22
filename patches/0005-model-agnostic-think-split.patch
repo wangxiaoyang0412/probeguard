@@ -1,0 +1,40 @@
+--- vendor/MA-RAG/utils.py.bak0005	2026-08-19 14:22:14.202260346 +0000
++++ vendor/MA-RAG/utils.py	2026-08-19 14:22:14.202260346 +0000
+@@ -110,6 +110,19 @@
+     except:
+         return False
+ 
++
++def split_reason_content(text: str):
++    # [patch 0005] format adapter for backbones without Qwen <think> tags
++    if '</think>' in text:
++        reason, _, content = text.rpartition('</think>')
++        reason = reason.split('<think>', 1)[-1].strip()
++        return reason, content.strip()
++    if '## Final Response' in text:
++        reason, _, content = text.partition('## Final Response')
++        reason = reason.replace('## Thinking', '', 1).strip()
++        return reason, content.strip()
++    return '', text.strip()
++
+ def inference(system: str, prompt: str, model: CustomLanguageModel, enable_thinking: bool = False, temperature: float = 0.7, check_format: bool = False, **kwargs) -> Tuple[str, str, Dict[str, Any]]:
+     messages = [
+         {'role': 'system', 'content': system},
+@@ -126,14 +139,9 @@
+             return [['', r['text'].strip(), r] for r in responses]
+         try:
+             for response in responses:
+-                if enable_thinking:
+-                    reason_content, content = response['text'].rsplit('</think>', maxsplit=1)
+-                    if not check_format or format_check(content.strip()):
+-                        return_infos.append([reason_content.split('<think>', maxsplit=1)[1].strip(), content.strip(), response])
+-                else:
+-                    content = response['text']
+-                    if not check_format or format_check(content.strip()):
+-                        return_infos.append(['', content.strip(), response])
++                reason_content, content = split_reason_content(response['text'])  # [patch 0005]
++                if not check_format or format_check(content):
++                    return_infos.append([reason_content, content, response])
+             return return_infos
+         except Exception as e:
+             print(f"Error processing response: {e}. Retrying...")

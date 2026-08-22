@@ -1,0 +1,18 @@
+diff --git a/utils.py b/utils.py
+index b457767..bff9a64 100644
+--- a/utils.py
++++ b/utils.py
+@@ -117,8 +117,13 @@ def inference(system: str, prompt: str, model: CustomLanguageModel, enable_think
+     ]
+     max_new_tokens = 8192 if enable_thinking else 2048
+     return_infos = []
++    attempts = 0
+     while True:
++        attempts += 1
+         responses = process_response(model.generate(messages, temperature=temperature, max_new_tokens=max_new_tokens, enable_thinking=enable_thinking, top_logprobs=20, **kwargs))
++        if attempts > 6:
++            # bounded-retry fallback: treat full text as content (missing </think> etc.)
++            return [['', r['text'].strip(), r] for r in responses]
+         try:
+             for response in responses:
+                 if enable_thinking:

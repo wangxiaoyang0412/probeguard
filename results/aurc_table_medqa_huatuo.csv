@@ -1,0 +1,6 @@
+signal,aurc
+terminal,0.1932
+r1,0.0932
+seq_logprob,0.2649
+ans_entropy,0.0928
+combined,0.0959

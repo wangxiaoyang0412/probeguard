@@ -1,0 +1,13 @@
+--- vendor/MA-RAG/utils.py.bak0005b	2026-08-19 16:52:03.915101508 +0000
++++ vendor/MA-RAG/utils.py	2026-08-19 16:52:03.915101508 +0000
+@@ -49,7 +49,9 @@
+ def judger(answer: str, target: str, single_answer: bool = True) -> Tuple[str, bool]:
+     try:
+         if '<answer>' in answer and '</answer>' in answer:
+-            ans = re.findall('([A-Z])', re.findall(r'<answer>(.*?)</answer>', answer)[-1])
++            tag = re.findall(r'<answer>(.*?)</answer>', answer)[-1]
++            m = re.match(r'\s*\**\s*([A-Z])\s*(?:[.．):：]|$)', tag)  # [patch 0005b] option-letter head
++            ans = [m.group(1)] if m else re.findall('([A-Z])', tag)
+         else:
+             answer = re.sub(r'[（）。、，：！？\[\]]', ' ', answer)
+             for split_str in ['最终答案', '答案是', '答案为', '答案选', 'Final Answer', 'Answer:']:

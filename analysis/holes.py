@@ -71,14 +71,14 @@ def _s1_scores():
 
 
 def h3(R=50):
-    """h3: repeated-split certification analysis for the S1 layer (R random 50/50 splits), mean±SE."""
+    """h3: repeated-split certification analysis for the S1 layer (R plain random 50/50 splits), mean±SE."""
     comb, y = _s1_scores()
     idx = np.arange(len(y))
     print(f"== h3 repeated splits R={R} on MedQA S1 (n={len(y)}) ==")
     for alpha in (0.10, 0.15, 0.20):
         covs, risks = [], []
         for seed in range(R):
-            cal, te = train_test_split(idx, test_size=0.5, random_state=seed, stratify=y)
+            cal, te = train_test_split(idx, test_size=0.5, random_state=seed)
             thr, _ = ltt_threshold(comb[cal], y[cal], alpha, delta=0.025)
             cov, risk = evaluate(comb[te], y[te], thr)
             covs.append(cov)

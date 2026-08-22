@@ -152,23 +152,30 @@ def main() -> None:
     # ---- frozen analysis outputs (not derivable from files above) ----
     frozen = {
         # certification narrative (phase1 v1/v3 + repeated-split analyses)
-        "NaiveViolation": "15.7", "CertGlobalShare": "35",
+        # A4 (2026-08-22): plain random 50/50 splits (stratify removed), old adaptive-grid
+        # LTT retained pending the A5 protocol decision; all values R=50, delta=0.025.
+        "NaiveViolation": "15.7", "CertGlobalShare": "33",
         # ablation/sensitivity (attribution.py, soft_eval, holes.py h4/h5)
         "AblDropFThree": "0.682", "HardFThreeMedQA": "0.578", "HardFThreeMMLUPro": "0.593",
         "RhoTrajMin": "0.93", "RhoRseMax": "0.39", "SmokeDelta": "0.007",
         "TransferBullets": "0.555",
         "FThreeMedQA": "0.587", "FThreeMMLUPro": "0.613",
         "KeepMedQA": "0.642", "ComboUaMedQA": "0.685", "ComboUaMMLUPro": "0.688",
+        # S1-layer baselines + three-signal composite (verified 2026-08-22 from
+        # probe_pilot/soft_f3/features/verbalized/ptrue result files, n=746)
+        "SlpUaMedQA": "0.680", "PTrueUaMedQA": "0.602", "VerbUaMedQA": "0.599",
+        "ComboThreeUaMedQA": "0.730",
         "FlipWrongMedQA": "14.0", "FlipRightMedQA": "4.2",
-        "CertAlpha": "0.15", "CertCovMean": "0.598", "CertCovSE": "0.029",
-        "CertRisk": "8.9", "CertNonzero": "46", "CertRepeats": "50",
+        "CertAlpha": "0.15", "CertCovMean": "0.561", "CertCovSE": "0.037",
+        "CertRisk": "9.1", "CertNonzero": "43", "CertRepeats": "50",
+        "CertViolations": "0",
         # fuel-augmented certification (analysis/c8_fuel_cert.py, R=50, zero violations)
-        "FuelN": "875", "FuelCertCovTen": "0.236", "FuelCertCovTenSE": "0.023",
-        "FuelCertRiskTen": "6.3", "FuelCertCovFifteen": "0.909",
-        "FuelCertCovFifteenSE": "0.003", "FuelCertRiskFifteen": "11.8",
+        "FuelN": "875", "FuelCertCovTen": "0.222", "FuelCertCovTenSE": "0.023",
+        "FuelCertRiskTen": "6.5", "FuelCertCovFifteen": "0.889",
+        "FuelCertCovFifteenSE": "0.005", "FuelCertRiskFifteen": "11.3",
         # cross-backbone S1 certification (analysis/fig_cert.py arms, R=50)
-        "CertCovTenHuatuo": "0.425", "CertCovFifteenHuatuo": "0.997",
-        "CertCovFifteenLlama": "0.869",
+        "CertCovTenHuatuo": "0.389", "CertCovFifteenHuatuo": "0.997",
+        "CertCovFifteenLlama": "0.827",
         # formation stats (results/formation_medqa.json): error rate among questions stopping at round 4
         "FormationRFourErr": "58.2",
         "ProbeMedianSecMedQA": "114", "ProbeMedianSecMMLUPro": "100",

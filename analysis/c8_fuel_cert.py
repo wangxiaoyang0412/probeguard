@@ -1,6 +1,6 @@
 """C8: fuel-augmented Mondrian certification on the MedQA unanimous layer.
-Protocol identical to the repeated-split analysis (R=50 stratified 50/50 splits of the
-MedQA S1 layer, LTT with delta=0.025, pre-registered score z(keep)+z(rse) with
+Protocol identical to the repeated-split analysis (R=50 plain random 50/50 splits of
+the MedQA S1 layer, LTT with delta=0.025, pre-registered score z(keep)+z(rse) with
 per-dataset standardization); the only change is that the calibration side is enlarged
 with the in-domain fuel set (GBaker train, unanimous layer). Test halves are untouched.
 Usage: .venv/bin/python analysis/c8_fuel_cert.py
@@ -49,7 +49,7 @@ def main() -> None:
         for alpha in ALPHAS:
             covs, risks = [], []
             for seed in range(R_SPLITS):
-                cal, te = train_test_split(idx, test_size=0.5, random_state=seed, stratify=y_m)
+                cal, te = train_test_split(idx, test_size=0.5, random_state=seed)
                 cal_s, cal_y = s_m[cal], y_m[cal]
                 if use_fuel:
                     cal_s = np.concatenate([cal_s, s_f])

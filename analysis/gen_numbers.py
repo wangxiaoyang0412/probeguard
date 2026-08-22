@@ -120,7 +120,11 @@ def main() -> None:
                "ans_entropy": "AurcAnsEntropy", "combined": "AurcCombined",
                "verbalized": "AurcVerbalized", "ptrue": "AurcPTrue"}
     for tex, fn in (("MedQA", "aurc_table_medqa.csv"), ("MMLUPro", "aurc_table_mmlupro.csv"),
-                    ("MedMCQA", "aurc_table_medmcqa.csv")):
+                    ("MedMCQA", "aurc_table_medmcqa.csv"),
+                    ("MedQAHuatuo", "aurc_table_medqa_huatuo.csv"),
+                    ("MMLUProHuatuo", "aurc_table_mmlupro_huatuo.csv"),
+                    ("MedQALlama", "aurc_table_medqa_llama.csv"),
+                    ("MMLUProLlama", "aurc_table_mmlupro_llama.csv")):
         p = R / fn
         if not p.exists():
             out.append(f"% aurc {tex}: missing")
@@ -158,6 +162,10 @@ def main() -> None:
         "FlipWrongMedQA": "14.0", "FlipRightMedQA": "4.2",
         "CertAlpha": "0.15", "CertCovMean": "0.598", "CertCovSE": "0.029",
         "CertRisk": "8.9", "CertNonzero": "46", "CertRepeats": "50",
+        # fuel-augmented certification (analysis/c8_fuel_cert.py, R=50, zero violations)
+        "FuelN": "875", "FuelCertCovTen": "0.236", "FuelCertCovTenSE": "0.023",
+        "FuelCertRiskTen": "6.3", "FuelCertCovFifteen": "0.909",
+        "FuelCertCovFifteenSE": "0.003", "FuelCertRiskFifteen": "11.8",
         "ProbeMedianSecMedQA": "114", "ProbeMedianSecMMLUPro": "100",
         "ProbeMedianTok": "4381", "GenMedianSecMedQA": "72",
     }

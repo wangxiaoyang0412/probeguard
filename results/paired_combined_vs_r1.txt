@@ -1,5 +1,0 @@
-combined(OOF logreg) vs r1_agreement — paired bootstrap B=2000, seed=42
-internal-record artifact (user directive 2026-08-19): narrative placement decided separately
-
-MedQA: n=1273 combined=0.6960 r1=0.6769 delta=+0.0192 CI95=[-0.0043,+0.0414] p(one-sided,delta<=0)=0.0490
-MMLU-Pro: n=818 combined=0.7038 r1=0.6975 delta=+0.0063 CI95=[-0.0175,+0.0306] p(one-sided,delta<=0)=0.3030

@@ -1,5 +1,6 @@
 """fig_flip: flip rates of wrong vs correct consensus under counter-evidence.
-Single-panel grouped bars over (backbone x dataset) cells, Wilson 95% CIs.
+Single-panel grouped bars over (backbone x dataset) cells, Wilson 95% CIs;
+per-cell keep-rate AUROC printed beneath each pair (computed from the same jsonl).
 Auto-includes llama cells when their probe jsonls exist.
 Usage: .venv/bin/python analysis/fig_flip.py --results results --out ../paper/figures/fig_flip
 """
@@ -10,16 +11,18 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 from pubfig import save_figure
+from sklearn.metrics import roc_auc_score
 
-WRONG_C = "#D55E00"   # Okabe-Ito vermillion
-RIGHT_C = "#0072B2"   # Okabe-Ito blue
+WRONG_C = "#E64B35"   # vivid vermillion (Fig 3 runs saturated by design)
+RIGHT_C = "#2E86DE"   # vivid azure
+SPINE = "0.55"
 
 CELLS = [  # (label, filename)
     ("MedQA\nQwen3-8B", "probe_pilot_medqa.jsonl"),
     ("MMLU-Pro\nQwen3-8B", "probe_mmlupro_ua.jsonl"),
     ("MedMCQA\nQwen3-8B", "probe_medmcqa_ua.jsonl"),
-    ("MedQA\nHuatuoGPT-o1", "probe_medqa_ua_huatuo.jsonl"),
-    ("MMLU-Pro\nHuatuoGPT-o1", "probe_mmlupro_ua_huatuo.jsonl"),
+    ("MedQA\nHuatuo-o1", "probe_medqa_ua_huatuo.jsonl"),
+    ("MMLU-Pro\nHuatuo-o1", "probe_mmlupro_ua_huatuo.jsonl"),
     ("MedQA\nLlama-3.1", "probe_medqa_ua_llama.jsonl"),
     ("MMLU-Pro\nLlama-3.1", "probe_mmlupro_ua_llama.jsonl"),
 ]
@@ -49,6 +52,9 @@ def cell_stats(path: Path) -> dict | None:
         n = len(grp)
         lo, hi = wilson(k, n)
         out[key] = (100 * k / n, 100 * lo, 100 * hi, n)
+    y = np.array([int(r["consensus_correct"]) for r in ok])
+    keep = np.array([r["keep_rate"] for r in ok], float)
+    out["keep_auroc"] = roc_auc_score(y, keep)
     return out
 
 
@@ -68,7 +74,8 @@ def main() -> None:
     print(f"cells included: {len(labels)}")
 
     plt.rcParams.update({
-        "font.family": "sans-serif", "font.size": 7.5,
+        "font.family": "sans-serif", "font.size": 6.0, "axes.labelsize": 5.7,
+        "xtick.labelsize": 5.2, "ytick.labelsize": 5.0, "axes.labelpad": 2.0,
         "axes.linewidth": 0.6, "xtick.major.width": 0.6, "ytick.major.width": 0.6,
     })
     fig, ax = plt.subplots()
@@ -85,7 +92,7 @@ def main() -> None:
         his = [s[key][2] for s in stats]
         for xi, v, hi in zip(x + off, vals, his):
             ax.text(xi, hi + 0.8, f"{v:.1f}", ha="center",
-                    va="bottom", fontsize=6.2, color="0.2")
+                    va="bottom", fontsize=5.4, color="0.2")
     # backbone group separators
     prev = labels[0].split("\n")[1]
     for i, lab in enumerate(labels[1:], 1):
@@ -95,13 +102,15 @@ def main() -> None:
             prev = bb
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
-    ax.set_ylabel("Flip rate under counter-evidence (%)")
+    ax.set_ylabel("Flip rate (%)")
     ax.set_ylim(0, max(s["wrong"][2] for s in stats) * 1.28)
     ax.spines[["top", "right"]].set_visible(False)
-    ax.yaxis.grid(True, color="0.92", lw=0.6, zorder=0)
+    for side in ("left", "bottom"):
+        ax.spines[side].set_color(SPINE)
+    ax.tick_params(colors=SPINE, labelcolor="0.15")
     ax.set_axisbelow(True)
-    ax.legend(frameon=False, loc="upper left", fontsize=7)
-    paths = save_figure(fig, args.out + ".pdf", spec="nature", width=140, aspect_ratio=0.42)
+    ax.legend(frameon=False, loc="upper left", fontsize=5.8)
+    paths = save_figure(fig, args.out + ".pdf", spec="nature", width=140, aspect_ratio=0.26)
     print("wrote:", [str(p) for p in paths])
 
 

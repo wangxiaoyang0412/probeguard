@@ -74,6 +74,33 @@ def ltt_threshold(scores_cal, y_cal, alpha, delta=0.05,
     return best
 
 
+def ltt_threshold_split(scores_cal, y_cal, alpha, delta=0.05,
+                        coverage_grid=np.arange(0.05, 1.0001, 0.05),
+                        grid_frac=0.2, seed=0):
+    """Split-LTT variant used in protocol robustness checks: a held-out grid_frac of
+    the calibration set fixes the candidate thresholds (its score quantiles at the
+    coverage grid); the LTT-Bonferroni binomial tests run on the remaining part."""
+    rng = np.random.RandomState(seed)
+    idx = rng.permutation(len(scores_cal))
+    n_grid = max(int(round(grid_frac * len(idx))), 1)
+    grid_part, test_part = idx[:n_grid], idx[n_grid:]
+    thresholds = np.unique(np.quantile(scores_cal[grid_part], 1.0 - coverage_grid))
+    s, yy = scores_cal[test_part], y_cal[test_part]
+    n = len(s)
+    delta_each = delta / len(thresholds)
+    best = (np.inf, 0.0)
+    for lam in thresholds:
+        ans = s >= lam
+        k = int(ans.sum())
+        if k == 0:
+            continue
+        errs = int((yy[ans] == 0).sum())
+        p = _binom_tail_pvalue(errs, k, alpha)
+        if p <= delta_each and k / n > best[1]:
+            best = (lam, k / n)
+    return best
+
+
 def evaluate(scores_te, y_te, thr):
     ans = scores_te >= thr
     cov = ans.mean()

@@ -2,7 +2,7 @@
 (Left) realized selective risk vs target alpha with the y=x bound diagonal: LTT arms stay
 below the diagonal everywhere they answer; naive quantile calibration crosses it.
 (Right) certified coverage vs alpha for the LTT arms (naive coverage is not comparable
-where its bound fails and is omitted). R=50 stratified splits per point, protocol of
+where its bound fails and is omitted). R=50 plain random splits per point, protocol of
 analysis/c8_fuel_cert.py; pre-registered claims remain the four ladder alphas.
 Usage: .venv/bin/python analysis/fig_cert.py --out ../paper/figures/fig_cert
 """
@@ -39,7 +39,7 @@ def curve(y: np.ndarray, s: np.ndarray, extra=None, naive: bool = False) -> tupl
     for alpha in ALPHAS:
         covs, risks = [], []
         for seed in range(R_SPLITS):
-            cal, te = train_test_split(idx, test_size=0.5, random_state=seed, stratify=y)
+            cal, te = train_test_split(idx, test_size=0.5, random_state=seed)
             cs, cy = s[cal], y[cal]
             if extra is not None:
                 cs = np.concatenate([cs, extra[1]])
@@ -111,7 +111,7 @@ def main() -> None:
         x0, y0, ha = spots[label]
         ax2.text(x0, y0, f"{cov[i15]:.3f}", fontsize=5.2, color=color, ha=ha, zorder=6,
                  path_effects=[patheffects.withStroke(linewidth=1.6, foreground="white")])
-    # dark-red stars on the two pre-registered fuel-arm operating points
+    # dark-red stars on the two fuel-arm operating points
     fuel_cov = arms[1][3][0]
     ax2.scatter([0.10, 0.15], [fuel_cov[i10], fuel_cov[i15]], marker="*", s=34,
                 color="#8B0000", zorder=5)

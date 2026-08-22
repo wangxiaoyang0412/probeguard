@@ -1,0 +1,10 @@
+torch==2.4.0
+transformers==4.44.2
+vllm==0.10.0
+pyserini==0.22.1
+scikit-learn==1.7.2
+numpy==2.2.6
+huggingface_hub==0.25.2
+openai
+python-liquid
+python-dotenv

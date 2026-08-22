@@ -1,0 +1,13 @@
+specialty,n_ua,coverage_mean,coverage_se,risk_pct_mean
+Cardiology,42,0.711,0.035,9.5
+Hematology,29,0.698,0.034,13.1
+Obstetrics and gynecology,51,0.681,0.033,14.7
+Other,86,0.629,0.031,3.5
+Gastroenterology,57,0.617,0.032,11.6
+Pediatrics,35,0.612,0.032,8.8
+Psychiatry,33,0.599,0.032,6.9
+Nephrology,30,0.595,0.029,8.1
+Emergency medicine,42,0.585,0.033,18.8
+Infectious diseases,36,0.577,0.030,10.3
+Endocrinology,51,0.524,0.025,4.1
+Neurology,37,0.495,0.026,7.6

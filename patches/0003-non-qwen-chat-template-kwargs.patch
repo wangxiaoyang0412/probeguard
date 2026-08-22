@@ -1,0 +1,22 @@
+diff --git a/microservice/CustomLanguageModel.py b/microservice/CustomLanguageModel.py
+index fc5b319..8cc0725 100644
+--- a/microservice/CustomLanguageModel.py
++++ b/microservice/CustomLanguageModel.py
+@@ -30,7 +30,7 @@ class CustomLanguageModel:
+         '''
+         extra_body = deepcopy(EXTRA_BODY_MAP.get(self.llm_name.lower(), DEFAULT_EXTRA_BODY))
+         if enable_thinking:
+-            extra_body['chat_template_kwargs']['enable_thinking'] = True
++            extra_body.setdefault('chat_template_kwargs', {})['enable_thinking'] = True
+ 
+         if top_logprobs:
+             kwargs['logprobs'] = True
+@@ -41,7 +41,7 @@ class CustomLanguageModel:
+ 
+         if continue_final_message:
+             extra_body['continue_final_message'] = True
+-            extra_body['chat_template_kwargs']['add_generation_prompt'] = False
++            extra_body.setdefault('chat_template_kwargs', {})['add_generation_prompt'] = False
+ 
+         for _ in range(self.max_retry_times):
+             try:

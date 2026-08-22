@@ -1,0 +1,14 @@
+diff --git a/microservice/RetrievalSystem.py b/microservice/RetrievalSystem.py
+index 44d6ec2..01a9e0e 100644
+--- a/microservice/RetrievalSystem.py
++++ b/microservice/RetrievalSystem.py
+@@ -161,8 +161,7 @@ class Retriever:
+             self.metadatas = None
+             self.embedding_function = None
+             if self.index_dir.exists():
+-                cache_index_dir = '/cache/corpus/' + str(self.index_dir.absolute()).split('corpus/')[-1]
+-                self.index = LuceneSearcher(cache_index_dir)
++                self.index = LuceneSearcher(str(self.index_dir.absolute()))
+             else:
+                 import os
+                 os.system("python -m pyserini.index.lucene --collection JsonCollection --input {:s} --index {:s} --generator DefaultLuceneDocumentGenerator --threads 16".format(str(self.chunk_dir.absolute()), str(self.index_dir.absolute())))

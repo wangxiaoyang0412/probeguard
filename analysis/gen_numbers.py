@@ -166,6 +166,9 @@ def main() -> None:
         "FuelN": "875", "FuelCertCovTen": "0.236", "FuelCertCovTenSE": "0.023",
         "FuelCertRiskTen": "6.3", "FuelCertCovFifteen": "0.909",
         "FuelCertCovFifteenSE": "0.003", "FuelCertRiskFifteen": "11.8",
+        # cross-backbone S1 certification (analysis/fig_cert.py arms, R=50)
+        "CertCovTenHuatuo": "0.425", "CertCovFifteenHuatuo": "0.997",
+        "CertCovFifteenLlama": "0.869",
         "ProbeMedianSecMedQA": "114", "ProbeMedianSecMMLUPro": "100",
         "ProbeMedianTok": "4381", "GenMedianSecMedQA": "72",
     }

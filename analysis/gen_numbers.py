@@ -169,6 +169,8 @@ def main() -> None:
         # cross-backbone S1 certification (analysis/fig_cert.py arms, R=50)
         "CertCovTenHuatuo": "0.425", "CertCovFifteenHuatuo": "0.997",
         "CertCovFifteenLlama": "0.869",
+        # formation stats (results/formation_medqa.json): error rate among questions stopping at round 4
+        "FormationRFourErr": "58.2",
         "ProbeMedianSecMedQA": "114", "ProbeMedianSecMMLUPro": "100",
         "ProbeMedianTok": "4381", "GenMedianSecMedQA": "72",
     }

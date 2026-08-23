@@ -148,6 +148,10 @@ def main() -> None:
     probe_macros(out, "MMLUProHuatuo", R / "probe_mmlupro_ua_huatuo.jsonl")
     probe_macros(out, "MedQALlama", R / "probe_medqa_ua_llama.jsonl")
     probe_macros(out, "MMLUProLlama", R / "probe_mmlupro_ua_llama.jsonl")
+    # probe control arms (abstain_layer/probe_control.py, qwen MedQA S1)
+    probe_macros(out, "CtrlNodocs", R / "probe_ctrl_nodocs.jsonl")
+    probe_macros(out, "CtrlRanddocs", R / "probe_ctrl_randdocs.jsonl")
+    probe_macros(out, "CtrlNeutral", R / "probe_ctrl_neutral.jsonl")
 
     # ---- frozen analysis outputs (not derivable from files above) ----
     frozen = {
@@ -166,6 +170,10 @@ def main() -> None:
         "SlpUaMedQA": "0.680", "PTrueUaMedQA": "0.602", "VerbUaMedQA": "0.599",
         "ComboThreeUaMedQA": "0.730",
         "FlipWrongMedQA": "14.0", "FlipRightMedQA": "4.2",
+        # probe control arms: paired-bootstrap CIs on the Delta difference
+        # (analysis/probe_ctrl_eval.py, B=2000 seed=42)
+        "CtrlDiffNodocsLo": "3.0", "CtrlDiffNodocsHi": "16.8",
+        "CtrlDiffRanddocsLo": "1.7", "CtrlDiffRanddocsHi": "16.8",
         "CertAlpha": "0.15", "CertCovMean": "0.561", "CertCovSE": "0.037",
         "CertRisk": "9.1", "CertNonzero": "43", "CertRepeats": "50",
         "CertViolations": "0",

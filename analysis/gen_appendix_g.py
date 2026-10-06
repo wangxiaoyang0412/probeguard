@@ -1,9 +1,10 @@
 """Appendix G: ablation matrix — drop-one feature family + classifier swap, per benchmark.
 Checkmark-matrix layout: one cmark/xmark column per family (xmark marks the removed
 family, full row on top), plain AUROC cells. Requires pifont-based \\cmark/\\xmark in the
-paper preamble. Writes ../paper/tables/tab_ablation.tex (complete tabular).
-Usage: .venv/bin/python analysis/gen_appendix_g.py
+paper preamble. Writes ../paper/tables/tab_ablation.tex (complete tabular); override with --out.
+Usage: .venv/bin/python analysis/gen_appendix_g.py [--out PATH]
 """
+import argparse
 import csv
 import sys
 from pathlib import Path
@@ -24,6 +25,9 @@ FAMILIES = (("agreement dynamics", "f0_"), ("answer-distribution dynamics", "f1_
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--out", default="../paper/tables/tab_ablation.tex")
+    args = parser.parse_args()
     rows = {"Full process score": [], "GBT in place of logistic regression": []}
     for name, _ in FAMILIES:
         rows[f"w/o {name}"] = []
@@ -58,7 +62,9 @@ def main() -> None:
     out.append(f"\\multicolumn{{5}}{{l}}{{{label}}} & "
                + " & ".join(f"{v:.3f}" for v in rows[label]) + " \\\\")
     out += ["\\bottomrule", "\\end{tabular}"]
-    Path("../paper/tables/tab_ablation.tex").write_text("\n".join(out) + "\n")
+    out_path = Path(args.out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text("\n".join(out) + "\n")
     for label in order + [label]:
         print(f"{label:42s} " + "  ".join(f"{v:.3f}" for v in rows[label]))
 

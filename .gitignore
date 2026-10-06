@@ -1,0 +1,17 @@
+# outputs of the reproduction commands
+outputs/
+runs/
+
+# substrate checkout
+vendor/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# editors and OS
+.DS_Store
+.idea/
+.vscode/

@@ -1,4 +1,4 @@
-"""Pre-registered adjudication of the probe control arms (plan/review_triage.md D2).
+"""Pre-registered evaluation of the probe control arms.
 
 Compares the counter-evidence probe against three control arms on the same MedQA S1
 questions: nodocs (instruction only), randdocs (instruction + irrelevant documents),
@@ -6,10 +6,10 @@ neutral (same documents, neutral instruction). The bet is one-directional: the f
 asymmetry Delta = flip(wrong) - flip(right) of the counter-evidence arm exceeds both
 content-free arms (nodocs, randdocs) with a paired-bootstrap 95% CI excluding zero.
 
-Verdicts (fixed before the control data were inspected):
-  A  both content-free arms significantly below the counter-evidence arm -> paper
-  B  direction right, any CI crosses zero -> internal record only
-  C  any content-free arm's Delta at or above the counter-evidence arm -> wording plan
+Outcomes (fixed before the control data were inspected):
+  A  both content-free arms significantly below the counter-evidence arm
+  B  direction as predicted, at least one CI includes zero
+  C  a content-free arm's Delta at or above the counter-evidence arm
 Usage: .venv/bin/python analysis/probe_ctrl_eval.py
 """
 import json
@@ -87,7 +87,8 @@ def main() -> None:
         elif lo <= 0 and verdict != "C":
             verdict = "B"
     print(f"\nVERDICT: {verdict}  "
-          "(A=paper, B=internal only, C=wording downgrade plan)")
+          "(A=both content-free arms below with CI excluding zero, "
+          "B=a CI includes zero, C=a content-free arm not below)")
 
 
 if __name__ == "__main__":

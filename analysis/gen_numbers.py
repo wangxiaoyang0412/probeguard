@@ -156,9 +156,9 @@ def main() -> None:
     # ---- frozen analysis outputs (not derivable from files above) ----
     frozen = {
         # certification narrative (phase1 v1/v3 + repeated-split analyses)
-        # A4 (2026-08-22): plain random 50/50 splits (stratify removed), old adaptive-grid
-        # LTT retained pending the A5 protocol decision; all values R=50, delta=0.025.
-        "NaiveViolation": "15.7", "CertGlobalShare": "33",
+        # plain random 50/50 splits; thresholds at calibration quantiles, binomial test on
+        # the questions strictly above each threshold; all values R=50, delta=0.025.
+        "NaiveViolation": "15.7", "CertGlobalShare": "32",
         # ablation/sensitivity (attribution.py, soft_eval, holes.py h4/h5)
         "AblDropFThree": "0.682", "HardFThreeMedQA": "0.578", "HardFThreeMMLUPro": "0.593",
         "RhoTrajMin": "0.93", "RhoRseMax": "0.39", "SmokeDelta": "0.007",
@@ -174,16 +174,16 @@ def main() -> None:
         # (analysis/probe_ctrl_eval.py, B=2000 seed=42)
         "CtrlDiffNodocsLo": "3.0", "CtrlDiffNodocsHi": "16.8",
         "CtrlDiffRanddocsLo": "1.7", "CtrlDiffRanddocsHi": "16.8",
-        "CertAlpha": "0.15", "CertCovMean": "0.561", "CertCovSE": "0.037",
-        "CertRisk": "9.1", "CertNonzero": "43", "CertRepeats": "50",
+        "CertAlpha": "0.15", "CertCovMean": "0.553", "CertCovSE": "0.038",
+        "CertRisk": "9.0", "CertNonzero": "43", "CertRepeats": "50",
         "CertViolations": "0",
         # fuel-augmented certification (analysis/c8_fuel_cert.py, R=50, zero violations)
-        "FuelN": "875", "FuelCertCovTen": "0.222", "FuelCertCovTenSE": "0.023",
-        "FuelCertRiskTen": "6.5", "FuelCertCovFifteen": "0.889",
-        "FuelCertCovFifteenSE": "0.005", "FuelCertRiskFifteen": "11.3",
+        "FuelN": "875", "FuelCertCovTen": "0.219", "FuelCertCovTenSE": "0.023",
+        "FuelCertRiskTen": "6.5", "FuelCertCovFifteen": "0.892",
+        "FuelCertCovFifteenSE": "0.004", "FuelCertRiskFifteen": "11.3",
         # cross-backbone S1 certification (analysis/fig_cert.py arms, R=50)
-        "CertCovTenHuatuo": "0.389", "CertCovFifteenHuatuo": "0.997",
-        "CertCovFifteenLlama": "0.827",
+        "CertCovTenHuatuo": "0.410", "CertCovFifteenHuatuo": "0.997",
+        "CertCovFifteenLlama": "0.838",
         # formation stats (results/formation_medqa.json): error rate among questions stopping at round 4
         "FormationRFourErr": "58.2",
         "ProbeMedianSecMedQA": "114", "ProbeMedianSecMMLUPro": "100",

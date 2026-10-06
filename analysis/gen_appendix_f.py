@@ -1,9 +1,10 @@
 """Appendix F: unified results table — AUROC and AURC for every signal x benchmark x backbone.
 Plain-number cells (venue convention); missing design cells rendered as --.
 Auto-fills verbalized/ptrue MedMCQA cells once elicitation jsonls exist.
-Writes ../paper/tables/tab_full_results.tex (complete tabular).
-Usage: .venv/bin/python analysis/gen_appendix_f.py
+Writes ../paper/tables/tab_full_results.tex (complete tabular); override with --out.
+Usage: .venv/bin/python analysis/gen_appendix_f.py [--out PATH]
 """
+import argparse
 import csv
 import json
 import sys
@@ -50,6 +51,9 @@ def conf_auroc(stem: str, sig: str) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--out", default="../paper/tables/tab_full_results.tex")
+    args = parser.parse_args()
     auroc, aurc = {}, {}
     for _, dsmap in BLOCKS:
         for stem in dsmap.values():
@@ -91,8 +95,10 @@ def main() -> None:
                 out.append("\\cmidrule(lr){1-7}")
             out.append(label + " & " + " & ".join(cells) + " \\\\")
     out += ["\\bottomrule", "\\end{tabular}"]
-    Path("../paper/tables/tab_full_results.tex").write_text("\n".join(out) + "\n")
-    print(f"wrote tab_full_results.tex ({len(out)} lines)")
+    out_path = Path(args.out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text("\n".join(out) + "\n")
+    print(f"wrote {out_path} ({len(out)} lines)")
 
 
 if __name__ == "__main__":

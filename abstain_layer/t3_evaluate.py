@@ -1,12 +1,9 @@
-"""Discriminative-power evaluation: feature CSVs -> AUROC tables + routing decision.
+"""Discriminative-power evaluation: feature CSVs -> AUROC tables + pre-specified gate.
 
-Decision rule (fixed in advance):
-  Auto-continue (the only automatic path): combined process-feature AUROC exceeds
-      bl_terminal_agreement by >= +0.02 on both datasets -> AUTO-CONTINUE.
-  Every other case -> ESCALATE: emit stratified results for a human decision
-      (continue / downgrade / stop).
-  This script never halts the project on its own; CIs, the strict reference, and
-      sub-gates are reporting-only.
+Gate (fixed in advance): the combined process-feature AUROC exceeds
+bl_terminal_agreement by >= +0.02 on both datasets. CIs, the strict reference
+(round-1 agreement), and the unanimous-subset check are reported alongside and do
+not enter the gate.
 Usage: python -m abstain_layer.t3_evaluate --features results/features_medqa.csv \
         results/features_medxpertqa.csv --out-dir results/
 """
@@ -151,7 +148,7 @@ def evaluate_dataset(path, out_dir):
     best_kind = max(results, key=lambda k: results[k][0])
     best_auc, d_lo, d_hi, best_oof = results[best_kind]
     delta = best_auc - term_auc
-    main_pass = delta >= MAIN_GATE_MARGIN          # auto-continue condition (CI is reporting-only, not routed on)
+    main_pass = delta >= MAIN_GATE_MARGIN          # gate condition (CI is reporting-only)
     r1_lo, r1_hi = boot_ci_diff(y, best_oof, r1)
     strict_delta = best_auc - r1_auc
     strict_pass = strict_delta >= MAIN_GATE_MARGIN and r1_lo > 0   # reporting-only
@@ -173,7 +170,7 @@ def evaluate_dataset(path, out_dir):
 
     print(f"combined[{best_kind}]={best_auc:.4f} vs terminal={term_auc:.4f} "
           f"delta={delta:+.4f} diff-CI=[{d_lo:+.4f},{d_hi:+.4f}] "
-          f"-> {'AUTO-OK' if main_pass else 'ESCALATE'}")
+          f"-> {'gate met' if main_pass else 'gate not met'}")
     print(f"  [report-only strict] vs r1_agreement={r1_auc:.4f} delta={strict_delta:+.4f} "
           f"diff-CI=[{r1_lo:+.4f},{r1_hi:+.4f}] "
           f"({'clears' if strict_pass else 'below'} +0.02 w/ CI)")
@@ -200,14 +197,11 @@ def main():
         subs.append(s)
     overall = all(mains)
     if overall:
-        print("\n########## PHASE0 ROUTING: AUTO-CONTINUE "
-              "(delta >= +0.02 on both datasets) ##########")
+        print("\n########## GATE MET (delta >= +0.02 on both datasets) ##########")
     else:
-        print("\n########## PHASE0 ROUTING: ESCALATE TO USER ##########")
-        print("Gate not met on both datasets -> escalate per the decision rule: "
-              "present stratified results (full AUROC tables / strict reference / "
-              "unanimous subset / risk-coverage) for a human decision to "
-              "continue / downgrade / stop. This pipeline cannot stop the project itself.")
+        print("\n########## GATE NOT MET ##########")
+        print("Delta below +0.02 on at least one dataset; see the full AUROC tables, the "
+              "strict reference, the unanimous subset, and the risk-coverage files.")
 
 
 if __name__ == "__main__":

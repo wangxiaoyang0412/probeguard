@@ -35,7 +35,7 @@ def certify_layer(scores, y, alpha, delta):
     cov, risk = evaluate(scores[te], y[te], thr)
     return {"n_cal": len(cal), "n_test": len(te), "thr": float(thr),
             "cal_cov": cov_cal, "test_cov": cov, "test_risk": risk,
-            "test_idx": te, "answered": scores[te] >= thr, "y_test": y[te]}
+            "test_idx": te, "answered": scores[te] > thr, "y_test": y[te]}
 
 
 def run(features_csv, soft_csv, alphas):

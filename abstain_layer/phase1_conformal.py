@@ -56,7 +56,12 @@ def ltt_threshold(scores_cal, y_cal, alpha, delta=0.05,
                   coverage_grid=np.arange(0.05, 1.0001, 0.05)):
     """LTT-Bonferroni: over a coverage grid, test H0: risk > alpha at level delta/|grid|
     per point; take the largest coverage that passes. Valid for non-monotone selective
-    risk, and not vetoed by a few errors at the top of the ranking."""
+    risk, and not vetoed by a few errors at the top of the ranking.
+
+    Each candidate threshold is a calibration order statistic, and the rule answers the
+    questions scoring strictly above it. Conditional on that order statistic, the
+    calibration questions above it are i.i.d. draws from the answered population, so the
+    exact binomial test is run on those questions."""
     n = len(scores_cal)
     order = np.argsort(-scores_cal)
     errs = (y_cal[order] == 0).cumsum()
@@ -66,11 +71,13 @@ def ltt_threshold(scores_cal, y_cal, alpha, delta=0.05,
     for c in coverage_grid:
         k = max(int(round(c * n)) - 1, 0)
         lam = thresholds[k]
-        # answered means score >= lam: tied scores are all included
-        k_end = np.searchsorted(-thresholds, -lam, side="right") - 1
-        p = _binom_tail_pvalue(int(errs[k_end]), int(k_end + 1), alpha)
-        if p <= delta_each and (k_end + 1) / n > best[1]:
-            best = (lam, (k_end + 1) / n)
+        # answered means score > lam: the threshold question and its ties are not answered
+        n_above = int(np.searchsorted(-thresholds, -lam, side="left"))
+        if n_above == 0:
+            continue
+        p = _binom_tail_pvalue(int(errs[n_above - 1]), n_above, alpha)
+        if p <= delta_each and n_above / n > best[1]:
+            best = (lam, n_above / n)
     return best
 
 
@@ -90,7 +97,7 @@ def ltt_threshold_split(scores_cal, y_cal, alpha, delta=0.05,
     delta_each = delta / len(thresholds)
     best = (np.inf, 0.0)
     for lam in thresholds:
-        ans = s >= lam
+        ans = s > lam
         k = int(ans.sum())
         if k == 0:
             continue
@@ -102,7 +109,7 @@ def ltt_threshold_split(scores_cal, y_cal, alpha, delta=0.05,
 
 
 def evaluate(scores_te, y_te, thr):
-    ans = scores_te >= thr
+    ans = scores_te > thr
     cov = ans.mean()
     risk = float((y_te[ans] == 0).mean()) if ans.any() else 0.0
     return cov, risk

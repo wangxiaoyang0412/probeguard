@@ -55,7 +55,7 @@ def main() -> None:
         thr, _ = ltt_threshold(comb[cal], y[cal], ALPHA, delta=DELTA)
         if thr is None:
             continue
-        ans = comb[te] >= thr
+        ans = comb[te] > thr
         for g in set(grp[te]):
             m = grp[te] == g
             n_ans = (ans & m).sum()
